@@ -30,7 +30,7 @@ func main() {
 	}
 
 	// Get BOT_TOKEN from .env
-	BotToken := os.Getenv("BOT_TOKEN")
+	BotToken = os.Getenv("BOT_TOKEN")
 	if BotToken == "" {
 		log.Fatal("❌ Переменная BOT_TOKEN не определена в .env")
 	}
