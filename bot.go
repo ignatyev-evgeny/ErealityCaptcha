@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 )
 
 func startBot(login, password string, chatId int64) {
@@ -31,7 +30,6 @@ func startBot(login, password string, chatId int64) {
 		chromedp.SendKeys(`input[name="login"]`, login, chromedp.ByQuery),
 		chromedp.SendKeys(`input[name="pass"]`, password, chromedp.ByQuery),
 		chromedp.Click(`input.btn_enter`, chromedp.ByQuery),
-		chromedp.Sleep(2*time.Second),
 	)
 
 	if err != nil {
@@ -45,18 +43,6 @@ func startBot(login, password string, chatId int64) {
 	go listenForCommands(ctx, chatId)
 
 	go waitForCaptchaAndSolve(ctx, chatId)
-
-	clickX := 650
-	clickY := 360
-
-	err = chromedp.Run(ctx,
-		chromedp.MouseClickXY(float64(clickX), float64(clickY)),
-	)
-	if err != nil {
-		log.Fatal("❌ Ошибка при клике:", err)
-	}
-
-	log.Printf("✅ Успешный клик по координатам (%d, %d)", clickX, clickY)
 
 	// Ожидание Ctrl+C
 	sig := make(chan os.Signal, 1)

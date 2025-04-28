@@ -73,17 +73,18 @@ func waitForCaptchaAndSolve(ctx context.Context, chatId int64) {
 
 				var captchaMessageID int
 
-				captchaMessageID, err = sendToTelegram("7783160085:AAGdcKa1aCYL3lwYJRyfzcR0eh2qrm3pspo", chatId, imgData)
+				captchaMessageID, err = sendToTelegram(BotToken, chatId, imgData)
 				if err != nil {
 					log.Println("❌ Ошибка при отправке капчи:", err)
 					return
 				}
 
-				answer, err := waitForCaptchaAnswer("7783160085:AAGdcKa1aCYL3lwYJRyfzcR0eh2qrm3pspo", chatId, captchaMessageID)
+				answer, err := waitForCaptchaAnswer(BotToken, chatId, captchaMessageID)
 				if err != nil {
 					log.Println("❌ Ошибка получения ответа на капчу:", err)
 					return
 				}
+
 				log.Println("✅ Ответ на капчу:", answer)
 
 				err = clickCaptchaAnswer(ctx, answer)
@@ -91,19 +92,8 @@ func waitForCaptchaAndSolve(ctx context.Context, chatId int64) {
 					log.Println("❌ Ошибка клика по капче:", err)
 				}
 
-				clickX := 650
-				clickY := 365
-
-				err = chromedp.Run(ctx,
-					chromedp.MouseClickXY(float64(clickX), float64(clickY)),
-				)
-				if err != nil {
-					log.Fatal("❌ Ошибка при клике:", err)
-				}
-
 				go waitForCaptchaAndSolve(ctx, chatId)
 
-				// Здесь будет решалка капчи
 				return
 			}
 
